@@ -1,0 +1,63 @@
+body {
+  margin: 0;
+  background-color: #0f172a;
+  font-family: Arial, sans-serif;
+  color: white;
+}
+
+.app {
+  text-align: center;
+  padding: 30px;
+}
+
+.movie-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+  margin-top: 40px;
+}
+
+.movie-card {
+  background-color: #1e293b;
+  border-radius: 12px;
+  padding: 20px;
+  transition: transform 0.2s ease;
+}
+
+.movie-card:hover {
+  transform: scale(1.03);
+}
+
+.movie-card img {
+  width: 100%;
+  max-width: 250px;
+  height: 370px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.movie-title {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.movie-genres {
+  color: #cbd5e1;
+}
+
+.movie-year {
+  color: #94a3b8;
+}
+
+.movie-rating {
+  color: #facc15;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.recommendation-score {
+  color: #4ade80;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
