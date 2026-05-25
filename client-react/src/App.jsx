@@ -5,7 +5,7 @@ function App() {
   const [tvShows, setTvShows] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5001/api/tv-shows")
+    fetch("https://tvshow-recommendation-platform.onrender.com/api/tv-shows")
       .then((res) => res.json())
       .then((data) => setTvShows(data))
       .catch((err) => console.log(err));
