@@ -1,6 +1,6 @@
-# Full-Stack Movie Recommendation Platform
+# Full-Stack TV Show Recommendation Platform
 
-A full-stack movie recommendation platform built with:
+A full-stack tv show recommendation platform built with:
 
 - React
 - Node.js
@@ -10,10 +10,10 @@ A full-stack movie recommendation platform built with:
 
 ## Features
 
-- Movie management
+- TV Show management
 - Members and subscriptions
 - Authentication and permissions
-- Content-based movie recommendations
+- Content-based tv show recommendations
 - Popularity-based recommendations
 - Recommendation evaluation metrics
 
