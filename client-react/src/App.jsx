@@ -3,37 +3,53 @@ import "./App.css";
 
 function App() {
   const [tvShows, setTvShows] = useState([]);
+  const [recommendations, setRecommendations] = useState([]);
 
   useEffect(() => {
     fetch("https://tvshow-recommendation-platform.onrender.com/api/tv-shows")
-      .then((res) => res.json())
+      .then((response) => response.json())
       .then((data) => setTvShows(data))
-      .catch((err) => console.log(err));
+      .catch((error) => console.error(error));
+
+    fetch(
+      "https://tvshow-recommendation-platform.onrender.com/api/recommendations",
+    )
+      .then((response) => response.json())
+      .then((data) => setRecommendations(data))
+      .catch((error) => console.error(error));
   }, []);
+
+  const renderCard = (show) => (
+    <div className="tv-card" key={show._id}>
+      <h2>{show.title}</h2>
+
+      <p>Genres: {show.genres.join(", ")}</p>
+
+      <p>Year: {show.year}</p>
+
+      <p className="score">Match Score: {show.recommendationScore}%</p>
+
+      <p className="rating">Your Rating: ⭐ {show.userRating}</p>
+
+      <img src={show.imageUrl} alt={show.title} />
+    </div>
+  );
 
   return (
     <div className="app">
       <h1>TV Show Recommendation Platform</h1>
 
-      <div className="tvshow-container">
-        {tvShows.map((tvShow) => (
-          <div className="tvshow-card" key={tvShow._id}>
-            <h2 className="tvshow-title">{tvShow.title}</h2>
+      <section>
+        <h2 className="section-title">Recommended For You</h2>
 
-            <p className="tvshow-genres">Genres: {tvShow.genres.join(", ")}</p>
+        <div className="tv-grid">{recommendations.map(renderCard)}</div>
+      </section>
 
-            <p className="tvshow-year">Year: {tvShow.year}</p>
+      <section>
+        <h2 className="section-title">All TV Shows</h2>
 
-            <p className="recommendation-score">
-              Match Score: {tvShow.recommendationScore}%
-            </p>
-
-            <p className="tvshow-rating">Your Rating: ⭐ {tvShow.userRating}</p>
-
-            <img src={tvShow.imageUrl} alt={tvShow.title} />
-          </div>
-        ))}
-      </div>
+        <div className="tv-grid">{tvShows.map(renderCard)}</div>
+      </section>
     </div>
   );
 }
