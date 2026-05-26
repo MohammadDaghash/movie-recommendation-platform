@@ -6,19 +6,20 @@ body {
 }
 
 .app {
-  text-align: center;
   padding: 30px;
 }
 
 h1 {
+  text-align: center;
   font-size: 52px;
   margin-bottom: 35px;
 }
 
 .section-title {
-  font-size: 32px;
+  font-size: 30px;
   margin-top: 45px;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
+  text-align: left;
 }
 
 .filters {
@@ -30,14 +31,18 @@ h1 {
   flex-wrap: wrap;
 }
 
-.search-input {
-  width: 320px;
+.search-input,
+.genre-select {
   padding: 12px;
   border-radius: 8px;
   border: 2px solid #93c5fd;
   background-color: #334155;
   color: white;
   font-size: 16px;
+}
+
+.search-input {
+  width: 320px;
 }
 
 .search-input::placeholder {
@@ -46,51 +51,56 @@ h1 {
 
 .genre-select {
   width: 180px;
-  padding: 12px;
-  border-radius: 8px;
-  border: 2px solid #93c5fd;
-  background-color: #334155;
-  color: white;
-  font-size: 16px;
   cursor: pointer;
 }
 
-.tv-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 25px;
-  margin-top: 20px;
-  margin-bottom: 50px;
+.carousel-row {
+  display: flex;
+  gap: 22px;
+  overflow-x: auto;
+  padding-bottom: 18px;
+  scroll-behavior: smooth;
+}
+
+.carousel-row::-webkit-scrollbar {
+  height: 8px;
+}
+
+.carousel-row::-webkit-scrollbar-thumb {
+  background-color: #475569;
+  border-radius: 999px;
 }
 
 .tv-card {
+  min-width: 240px;
+  max-width: 240px;
   background-color: #1e293b;
   border-radius: 12px;
-  padding: 20px;
+  padding: 18px;
   transition: transform 0.2s ease;
+  flex-shrink: 0;
 }
 
 .tv-card:hover {
-  transform: scale(1.03);
+  transform: scale(1.04);
 }
 
 .tv-card img {
   width: 100%;
-  max-width: 240px;
-  height: 350px;
+  height: 330px;
   object-fit: cover;
   border-radius: 10px;
-  margin-top: 10px;
 }
 
-.tv-card h2 {
-  font-size: 26px;
-  margin-bottom: 10px;
+.tv-card h3 {
+  font-size: 22px;
+  margin: 14px 0 8px;
 }
 
 .tv-card p {
   margin: 6px 0;
   color: #cbd5e1;
+  font-size: 15px;
 }
 
 .score {
@@ -101,5 +111,39 @@ h1 {
 .rating {
   color: #facc15 !important;
   font-weight: bold;
-  margin-bottom: 10px;
+}
+
+.similar-shows {
+  color: #93c5fd;
+  font-size: 14px;
+  margin-top: 10px;
+  line-height: 1.5;
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.tab {
+  padding: 10px 22px;
+  border: 2px solid #93c5fd;
+  background-color: #1e293b;
+  color: #cbd5e1;
+  border-radius: 999px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab:hover {
+  background-color: #334155;
+}
+
+.active-tab {
+  background-color: #93c5fd;
+  color: #0f172a;
+  font-weight: bold;
 }

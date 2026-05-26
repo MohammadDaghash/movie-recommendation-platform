@@ -32,6 +32,11 @@ const tvShowSchema = new mongoose.Schema(
       max: 100,
     },
 
+    watched: {
+      type: Boolean,
+      default: true,
+    },
+
     type: {
       type: String,
       default: "tv-show",

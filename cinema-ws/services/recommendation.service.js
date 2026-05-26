@@ -6,10 +6,10 @@ const {
   cosineSimilarity,
 } = require("./featureEngineering.service");
 
-const createPreferenceVector = (tvShows, allGenres) => {
+const createPreferenceVector = (watchedShows, allGenres) => {
   const preferenceVector = Array(allGenres.length).fill(0);
 
-  const totalRating = tvShows.reduce((sum, tvShow) => {
+  const totalRating = watchedShows.reduce((sum, tvShow) => {
     return sum + (tvShow.userRating || 0);
   }, 0);
 
@@ -17,7 +17,7 @@ const createPreferenceVector = (tvShows, allGenres) => {
     return preferenceVector;
   }
 
-  tvShows.forEach((tvShow) => {
+  watchedShows.forEach((tvShow) => {
     const genreVector = createGenreVector(tvShow, allGenres);
     const ratingWeight = tvShow.userRating || 0;
 
@@ -29,6 +29,34 @@ const createPreferenceVector = (tvShows, allGenres) => {
   return preferenceVector.map((value) => value / totalRating);
 };
 
+const calculateRecommendationScore = (tvShow, preferenceVector, allGenres) => {
+  const genreVector = createGenreVector(tvShow, allGenres);
+  const similarity = cosineSimilarity(genreVector, preferenceVector);
+
+  return {
+    recommendationScore: Math.round(similarity * 100),
+    similarity: Number(similarity.toFixed(3)),
+  };
+};
+
+const findSimilarWatchedShows = (candidateShow, watchedShows, allGenres) => {
+  const candidateVector = createGenreVector(candidateShow, allGenres);
+
+  return watchedShows
+    .map((watchedShow) => {
+      const watchedVector = createGenreVector(watchedShow, allGenres);
+      const similarity = cosineSimilarity(candidateVector, watchedVector);
+
+      return {
+        title: watchedShow.title,
+        similarity: Number(similarity.toFixed(3)),
+      };
+    })
+    .filter((show) => show.similarity > 0)
+    .sort((a, b) => b.similarity - a.similarity)
+    .slice(0, 3);
+};
+
 const getRecommendations = async () => {
   const tvShows = await TVShow.find();
 
@@ -36,17 +64,27 @@ const getRecommendations = async () => {
     return [];
   }
 
+  const watchedShows = tvShows.filter((tvShow) => tvShow.watched === true);
   const allGenres = getUniqueGenres(tvShows);
-  const preferenceVector = createPreferenceVector(tvShows, allGenres);
+  const preferenceVector = createPreferenceVector(watchedShows, allGenres);
 
   const scoredTVShows = tvShows.map((tvShow) => {
-    const genreVector = createGenreVector(tvShow, allGenres);
-    const similarity = cosineSimilarity(genreVector, preferenceVector);
+    const scores = calculateRecommendationScore(
+      tvShow,
+      preferenceVector,
+      allGenres,
+    );
+
+    const similarWatchedShows =
+      tvShow.watched === false
+        ? findSimilarWatchedShows(tvShow, watchedShows, allGenres)
+        : [];
 
     return {
       ...tvShow.toObject(),
-      recommendationScore: Math.round(similarity * 100),
-      similarity: Number(similarity.toFixed(3)),
+      recommendationScore: scores.recommendationScore,
+      similarity: scores.similarity,
+      similarWatchedShows,
     };
   });
 
