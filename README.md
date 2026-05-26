@@ -1,4 +1,4 @@
-# Full-Stack TV Show Recommendation Platform
+# Full-Stack TV Show Recommendation Platform using Machine Learning
 
 A full-stack tv show recommendation platform built with:
 
