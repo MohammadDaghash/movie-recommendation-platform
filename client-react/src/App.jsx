@@ -22,14 +22,14 @@ function App() {
   const allGenres = [
     "All",
     ...new Set(
-      tvShows
+      recommendations
         .flatMap((show) => show.genres)
         .filter(Boolean)
         .sort(),
     ),
   ];
 
-  const filteredShows = tvShows.filter((show) => {
+  const filteredShows = recommendations.filter((show) => {
     const matchesSearch = show.title
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
