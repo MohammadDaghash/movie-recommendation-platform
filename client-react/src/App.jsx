@@ -4,20 +4,43 @@ import "./App.css";
 function App() {
   const [tvShows, setTvShows] = useState([]);
   const [recommendations, setRecommendations] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedGenre, setSelectedGenre] = useState("All");
 
   useEffect(() => {
-    fetch("https://tvshow-recommendation-platform.onrender.com/api/tv-shows")
+    fetch("http://localhost:5001/api/tv-shows")
       .then((response) => response.json())
       .then((data) => setTvShows(data))
       .catch((error) => console.error(error));
 
-    fetch(
-      "https://tvshow-recommendation-platform.onrender.com/api/recommendations",
-    )
+    fetch("http://localhost:5001/api/recommendations")
       .then((response) => response.json())
       .then((data) => setRecommendations(data))
       .catch((error) => console.error(error));
   }, []);
+
+  const allGenres = [
+    "All",
+    ...new Set(
+      tvShows
+        .flatMap((show) => show.genres)
+        .filter(Boolean)
+        .sort(),
+    ),
+  ];
+
+  const filteredShows = tvShows.filter((show) => {
+    const matchesSearch = show.title
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+
+    const matchesGenre =
+      selectedGenre === "All" || show.genres.includes(selectedGenre);
+
+    return matchesSearch && matchesGenre;
+  });
+
+  const isFiltering = searchTerm !== "" || selectedGenre !== "All";
 
   const renderCard = (show) => (
     <div className="tv-card" key={show._id}>
@@ -39,16 +62,40 @@ function App() {
     <div className="app">
       <h1>TV Show Recommendation Platform</h1>
 
-      <section>
-        <h2 className="section-title">Recommended For You</h2>
+      <div className="filters">
+        <input
+          type="text"
+          placeholder="Search TV shows..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="search-input"
+        />
 
-        <div className="tv-grid">{recommendations.map(renderCard)}</div>
-      </section>
+        <select
+          value={selectedGenre}
+          onChange={(e) => setSelectedGenre(e.target.value)}
+          className="genre-select"
+        >
+          {allGenres.map((genre) => (
+            <option value={genre} key={genre}>
+              {genre}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {!isFiltering && (
+        <section>
+          <h2 className="section-title">Recommended For You</h2>
+
+          <div className="tv-grid">{recommendations.map(renderCard)}</div>
+        </section>
+      )}
 
       <section>
         <h2 className="section-title">All TV Shows</h2>
 
-        <div className="tv-grid">{tvShows.map(renderCard)}</div>
+        <div className="tv-grid">{filteredShows.map(renderCard)}</div>
       </section>
     </div>
   );

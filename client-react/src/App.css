@@ -10,54 +10,96 @@ body {
   padding: 30px;
 }
 
-.tvshow-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 25px;
-  margin-top: 40px;
+h1 {
+  font-size: 52px;
+  margin-bottom: 35px;
 }
 
-.tvshow-card {
+.section-title {
+  font-size: 32px;
+  margin-top: 45px;
+  margin-bottom: 25px;
+}
+
+.filters {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 35px;
+  flex-wrap: wrap;
+}
+
+.search-input {
+  width: 320px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 2px solid #93c5fd;
+  background-color: #334155;
+  color: white;
+  font-size: 16px;
+}
+
+.search-input::placeholder {
+  color: #94a3b8;
+}
+
+.genre-select {
+  width: 180px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 2px solid #93c5fd;
+  background-color: #334155;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.tv-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 25px;
+  margin-top: 20px;
+  margin-bottom: 50px;
+}
+
+.tv-card {
   background-color: #1e293b;
   border-radius: 12px;
   padding: 20px;
   transition: transform 0.2s ease;
 }
 
-.tvshow-card:hover {
+.tv-card:hover {
   transform: scale(1.03);
 }
 
-.tvshow-card img {
+.tv-card img {
   width: 100%;
-  max-width: 250px;
-  height: 370px;
+  max-width: 240px;
+  height: 350px;
   object-fit: cover;
   border-radius: 10px;
   margin-top: 10px;
 }
 
-.tvshow-title {
-  font-size: 28px;
+.tv-card h2 {
+  font-size: 26px;
   margin-bottom: 10px;
 }
 
-.tvshow-genres {
+.tv-card p {
+  margin: 6px 0;
   color: #cbd5e1;
 }
 
-.tvshow-year {
-  color: #94a3b8;
-}
-
-.tvshow-rating {
-  color: #facc15;
+.score {
+  color: #4ade80 !important;
   font-weight: bold;
-  margin-bottom: 10px;
 }
 
-.recommendation-score {
-  color: #4ade80;
+.rating {
+  color: #facc15 !important;
   font-weight: bold;
   margin-bottom: 10px;
 }
