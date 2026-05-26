@@ -2,6 +2,7 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
+const tmdbRoutes = require("./routes/tmdb.routes");
 
 const connectDB = require("./config/db");
 const tvShowRoutes = require("./routes/tvShowRoutes.js");
@@ -16,6 +17,8 @@ app.use(express.json());
 
 app.use("/api/tv-shows", tvShowRoutes);
 app.use("/api/recommendations", recommendationRoutes);
+
+app.use("/api/tmdb", tmdbRoutes);
 
 app.get("/", (req, res) => {
   res.json({

@@ -147,3 +147,205 @@ h1 {
   color: #0f172a;
   font-weight: bold;
 }
+
+.watch-button {
+  margin-top: 12px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 999px;
+  background-color: #93c5fd;
+  color: #0f172a;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.watch-button:hover {
+  background-color: #bfdbfe;
+  transform: scale(1.04);
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(15, 23, 42, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.rating-modal {
+  background-color: #1e293b;
+  padding: 30px;
+  border-radius: 20px;
+  width: 400px;
+  text-align: center;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+}
+
+.rating-modal h2 {
+  margin-bottom: 20px;
+}
+
+.rating-input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  border: 2px solid #93c5fd;
+  background-color: #334155;
+  color: white;
+  font-size: 18px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.cancel-button,
+.save-button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 999px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.cancel-button {
+  background-color: #475569;
+  color: white;
+}
+
+.save-button {
+  background-color: #93c5fd;
+  color: #0f172a;
+}
+
+.cancel-button:hover,
+.save-button:hover {
+  transform: scale(1.05);
+}
+
+.secondary-button,
+.danger-button {
+  display: block;
+  margin: 10px auto 0;
+  padding: 9px 14px;
+  border: none;
+  border-radius: 999px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.secondary-button {
+  background-color: #64748b;
+  color: white;
+}
+
+.secondary-button:hover {
+  background-color: #94a3b8;
+  transform: scale(1.04);
+}
+
+.danger-button {
+  background-color: #dc2626;
+  color: white;
+}
+
+.danger-button:hover {
+  background-color: #ef4444;
+  transform: scale(1.04);
+}
+
+.add-show-button {
+  display: block;
+  margin: 0 auto 25px;
+  padding: 12px 22px;
+  border: none;
+  border-radius: 999px;
+  background-color: #4ade80;
+  color: #0f172a;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.add-show-button:hover {
+  background-color: #86efac;
+  transform: scale(1.04);
+}
+
+.add-show-modal {
+  background-color: #1e293b;
+  padding: 30px;
+  border-radius: 20px;
+  width: 650px;
+  max-height: 80vh;
+  overflow-y: auto;
+  text-align: center;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+}
+
+.tmdb-search-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.tmdb-results {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 20px 0;
+}
+
+.tmdb-result {
+  display: flex;
+  gap: 15px;
+  text-align: left;
+  background-color: #334155;
+  border-radius: 12px;
+  padding: 12px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: 0.2s ease;
+}
+
+.tmdb-result:hover {
+  background-color: #475569;
+}
+
+.selected-tmdb-result {
+  border-color: #93c5fd;
+}
+
+.tmdb-result img {
+  width: 90px;
+  height: 135px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.tmdb-result h3 {
+  margin: 0 0 6px;
+}
+
+.tmdb-result p {
+  margin: 4px 0;
+  color: #cbd5e1;
+  font-size: 14px;
+}
+
+.save-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

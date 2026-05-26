@@ -20,6 +20,22 @@ const tvShowSchema = new mongoose.Schema(
       type: String,
     },
 
+    overview: {
+      type: String,
+    },
+
+    popularity: {
+      type: Number,
+    },
+
+    tmdbRating: {
+      type: Number,
+    },
+
+    tmdbId: {
+      type: Number,
+    },
+
     userRating: {
       type: Number,
       min: 0,
