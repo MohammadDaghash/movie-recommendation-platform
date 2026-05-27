@@ -7,8 +7,10 @@ const {
   searchTMDBTVShows,
 } = require("../controllers/tmdb.controller");
 
+const { protect } = require("../middleware/auth.middleware");
+
 router.get("/search", searchTMDBTVShows);
 
-router.post("/import", importTVShow);
+router.post("/import", protect, adminOnly, importTVShow);
 
 module.exports = router;
