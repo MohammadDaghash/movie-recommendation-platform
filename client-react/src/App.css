@@ -459,3 +459,72 @@ h1 {
   display: flex;
   gap: 12px;
 }
+
+@media (max-width: 768px) {
+  .app-container {
+    padding: 24px 16px;
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  h1 {
+    font-size: 42px;
+    line-height: 0.95;
+    text-align: center;
+    max-width: 100%;
+    word-break: normal;
+  }
+
+  .auth-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .main-actions,
+  .tabs {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .tab-button,
+  .add-button {
+    font-size: 22px;
+    padding: 22px 28px;
+    min-width: 160px;
+  }
+
+  .search-filter-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .search-input,
+  .genre-select {
+    width: 100%;
+    max-width: 340px;
+    font-size: 24px;
+  }
+
+  .shows-grid {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+}
+
+@media (max-width: 430px) {
+  h1 {
+    font-size: 38px;
+    line-height: 0.9;
+  }
+
+  .tab-button,
+  .add-button {
+    min-width: 140px;
+    font-size: 20px;
+  }
+}
