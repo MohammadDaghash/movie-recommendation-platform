@@ -3,6 +3,7 @@ import "./App.css";
 
 function App() {
   const [recommendations, setRecommendations] = useState([]);
+  const [mlSuggestions, setMlSuggestions] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedGenre, setSelectedGenre] = useState("All");
   const [activeTab, setActiveTab] = useState("watched");
@@ -24,11 +25,17 @@ function App() {
   const [isUserLoginOpen, setIsUserLoginOpen] = useState(false);
   const [isSignupOpen, setIsSignupOpen] = useState(false);
   const [loginError, setLoginError] = useState("");
+  const [ignoredSuggestionIds, setIgnoredSuggestionIds] = useState([]);
 
   useEffect(() => {
     fetch("http://localhost:5001/api/recommendations")
       .then((response) => response.json())
       .then((data) => setRecommendations(data))
+      .catch((error) => console.error(error));
+
+    fetch("http://localhost:5001/api/ml-recommendations/tmdb")
+      .then((response) => response.json())
+      .then((data) => setMlSuggestions(data))
       .catch((error) => console.error(error));
   }, []);
 
@@ -68,15 +75,39 @@ function App() {
   const getPrimaryCategory = (show) => {
     const genres = show.genres;
 
-    if (genres.includes("Comedy")) return "Comedy";
-    if (genres.includes("Romance")) return "Drama & Romance";
-    if (genres.includes("Crime") || genres.includes("Thriller"))
-      return "Crime & Thriller";
-    if (genres.includes("Fantasy") || genres.includes("Sci-Fi"))
-      return "Fantasy & Sci-Fi";
-    if (genres.includes("Animation")) return "Animation";
+    if (genres.includes("Animation") || genres.includes("Anime")) {
+      return "Animation";
+    }
 
-    return "Drama";
+    if (
+      genres.includes("Fantasy") ||
+      genres.includes("Sci-Fi") ||
+      genres.includes("Science Fiction") ||
+      genres.includes("Science-Fiction") ||
+      genres.includes("Sci-Fi & Fantasy") ||
+      genres.includes("Adventure")
+    ) {
+      return "Fantasy & Sci-Fi";
+    }
+
+    if (
+      genres.includes("Crime") ||
+      genres.includes("Thriller") ||
+      genres.includes("Mystery") ||
+      genres.includes("Horror")
+    ) {
+      return "Crime & Thriller";
+    }
+
+    if (genres.includes("Drama") && genres.includes("Romance")) {
+      return "Drama & Romance";
+    }
+
+    if (genres.includes("Comedy")) {
+      return "Comedy";
+    }
+
+    return "Drama & Romance";
   };
 
   const categoryOrder = [
@@ -85,7 +116,6 @@ function App() {
     "Crime & Thriller",
     "Fantasy & Sci-Fi",
     "Animation",
-    "Drama",
   ];
 
   const showsByCategory = categoryOrder
@@ -141,6 +171,39 @@ function App() {
     const updatedRecommendations = await response.json();
 
     setRecommendations(updatedRecommendations);
+  };
+
+  const refreshMLSuggestions = async () => {
+    const response = await fetch(
+      "http://localhost:5001/api/ml-recommendations/tmdb",
+    );
+
+    const data = await response.json();
+
+    setMlSuggestions(data);
+  };
+
+  const ignoreSuggestion = async (tmdbId, title) => {
+    try {
+      await fetch("http://localhost:5001/api/ignored-suggestions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          tmdbId,
+          title,
+        }),
+      });
+
+      await refreshMLSuggestions();
+
+      setIgnoredSuggestionIds((previousIds) => [...previousIds, tmdbId]);
+
+      setDetailsShow(null);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const moveToWantToWatch = async (showId) => {
@@ -199,7 +262,9 @@ function App() {
     });
 
     await refreshRecommendations();
+    await refreshMLSuggestions();
 
+    setDetailsShow(null);
     setNewShowTitle("");
     setTmdbResults([]);
     setSelectedTMDBShow(null);
@@ -363,12 +428,43 @@ function App() {
       ) : (
         <>
           {activeTab === "unwatched" && (
-            <section>
-              <h2 className="section-title">Recommended For You</h2>
-              <div className="carousel-row">
-                {unwatchedShows.slice(0, 10).map(renderCard)}
-              </div>
-            </section>
+            <>
+              <section>
+                <h2 className="section-title">AI Suggestions</h2>
+
+                <div className="carousel-row">
+                  {mlSuggestions
+                    .filter(
+                      (show) => !ignoredSuggestionIds.includes(show.tmdbId),
+                    )
+                    .map((show) => (
+                      <div
+                        className="tv-card"
+                        key={show.title}
+                        onClick={() => setDetailsShow(show)}
+                      >
+                        <img src={show.imageUrl} alt={show.title} />
+
+                        <h3>{show.title}</h3>
+
+                        <p>{show.genres.join(", ")}</p>
+
+                        <p>Year: {show.year}</p>
+
+                        <p className="score">Match Score: {show.matchScore}%</p>
+                      </div>
+                    ))}
+                </div>
+              </section>
+
+              <section>
+                <h2 className="section-title">Want to Watch</h2>
+
+                <div className="carousel-row">
+                  {unwatchedShows.map(renderCard)}
+                </div>
+              </section>
+            </>
           )}
 
           {showsByCategory.map((group) => (
@@ -504,7 +600,56 @@ function App() {
 
               {detailsShow.overview && <p>{detailsShow.overview}</p>}
 
-              {detailsShow.watched ? (
+              {detailsShow.isAISuggestion ? (
+                <>
+                  <p className="score">
+                    Match Score: {detailsShow.recommendationScore}%
+                  </p>
+
+                  {detailsShow.scoreBreakdown && (
+                    <p className="score-breakdown">
+                      Taste: {detailsShow.scoreBreakdown.genreSimilarity}% ·
+                      Category Preference:{" "}
+                      {detailsShow.scoreBreakdown.categoryPreference}% · TMDB:{" "}
+                      {detailsShow.scoreBreakdown.tmdbRating}% · Popularity:{" "}
+                      {detailsShow.scoreBreakdown.popularity}% · Year Match:{" "}
+                      {detailsShow.scoreBreakdown.yearSimilarity}%
+                    </p>
+                  )}
+
+                  {detailsShow.similarWatchedShows?.length > 0 && (
+                    <p className="similar-text">
+                      Because you liked{" "}
+                      {detailsShow.similarWatchedShows
+                        .map(
+                          (similarShow) =>
+                            `${similarShow.title} (${Math.round(
+                              similarShow.similarity * 100,
+                            )}%)`,
+                        )
+                        .join(", ")}
+                    </p>
+                  )}
+
+                  <div className="details-actions">
+                    <button
+                      className="watch-button"
+                      onClick={() => importTVShow(detailsShow.tmdbId)}
+                    >
+                      Add to Want to Watch
+                    </button>
+
+                    <button
+                      className="danger-button"
+                      onClick={() =>
+                        ignoreSuggestion(detailsShow.tmdbId, detailsShow.title)
+                      }
+                    >
+                      Not Interested
+                    </button>
+                  </div>
+                </>
+              ) : detailsShow.watched ? (
                 <>
                   <p className="rating">
                     Your Rating: ⭐ {detailsShow.userRating}
@@ -545,8 +690,11 @@ function App() {
                   {detailsShow.scoreBreakdown && (
                     <p className="score-breakdown">
                       Taste: {detailsShow.scoreBreakdown.genreSimilarity}% ·
-                      TMDB: {detailsShow.scoreBreakdown.tmdbRating}% ·
-                      Popularity: {detailsShow.scoreBreakdown.popularity}%
+                      Category Preference:{" "}
+                      {detailsShow.scoreBreakdown.categoryPreference}% · TMDB:{" "}
+                      {detailsShow.scoreBreakdown.tmdbRating}% · Popularity:{" "}
+                      {detailsShow.scoreBreakdown.popularity}% · Year Match:{" "}
+                      {detailsShow.scoreBreakdown.yearSimilarity}%
                     </p>
                   )}
 

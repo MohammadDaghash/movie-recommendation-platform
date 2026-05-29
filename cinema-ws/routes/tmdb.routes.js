@@ -7,7 +7,7 @@ const {
   searchTMDBTVShows,
 } = require("../controllers/tmdb.controller");
 
-const { protect } = require("../middleware/auth.middleware");
+const { protect, adminOnly } = require("../middleware/auth.middleware");
 
 router.get("/search", searchTMDBTVShows);
 
